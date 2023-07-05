@@ -1,85 +1,283 @@
-# Wizeline Data Engineering Bootcamp Challenge
 
-Thank you for registering for the Wizeline Academy Data Engineering Bootcamp, and welcome to the Technical Challenge!
+# Table of Contents
 
-To be accepted into the Wizeline Academy Data Engineering Bootcamp, you must complete the Technical Challenge, which consists of two parts. After registering, you have **three days** to complete both parts, detailed below.
+1.  [Contains of this repo](#orgd498d9b)
+2.  [Terraform K8s Cluster](#org345164b)
+    1.  [Terraform AWS-EKS](#org7565b64)
+        1.  [Prerequisites](#orge649e36)
+        2.  [Dependencies](#orged9bd56)
+        3.  [Installing](#org1afe563)
+    2.  [Terraform GCP-GKEz](#org0f67a5b)
+        1.  [Prerequisites](#org31b9b2f)
+        2.  [Dependencies](#orgac59c44)
+        3.  [Installing](#org0bff38b)
+    3.  [Terraform destruction](#orgaf76e90)
+3.  [Airflow](#orge05fa1c)
+    1.  [Prerequisites](#org354ee35)
+    2.  [Dependencies](#orga24c46c)
+    3.  [NFS preparation](#org8d73d40)
+    4.  [Storage](#orgf1fe05d)
+    5.  [Airflow Installation](#org277433f)
+    6.  [Accessing to Airflow dashboard](#org7056489)
+4.  [Acknowledgments](#org39ecc4e)
 
-This challenge **is not** a test or an exam; it is a project, and you are the engineer assigned to solve this issue.
-
-Communication is essential, and we are here to help you if you get stuck or have any concerns - open an issue in the source repository, and our team of expert Data Engineers will get back to you as soon as possible!
-
-We need you to use the same email address for your registration, for your Coding Challenge in **CodeSignal** and for your Practical Challenge. This way we can have a 360 profile of your work.
-<br />
-
-## Technical Challenge Part 1 - Coding
-
-To allow you to show your coding skills, we have designed a challenge for you in **`CodeSignal`**.
-
-You can access this part of the challenge using the following **[link](https://app.codesignal.com/public-test/M4aKscdKFjuzgzPTA/ZnpLfepFRD22eh)**.
-
-### Important Notes:
-
-- Once you start this part of the challenge, you will have **1 hour** to complete it within the CodeSignal platform!
-- Make sure before you start, you have the time available to finish it.
-- You **must** complete this part of the challenge before moving on to the second part, detailed below.
-  <br />
-  <br />
-
-## Technical Challenge Part 2 - Practical Applications
-
-For the second part of the challenge, we would like you to fork **[this repository](https://github.com/wizelineacademy/data-engineering-bootcamp)**, read the rest of the instructions labeled "Exploratory Analysis," and solve the questions listed at the end of the statement.
-This challenge will help us understand your problem-solving skills.
-
-### Important notes:
-
-- We expect this part of the challenge to take about **3 hours** to complete.
-- There are no specific time limitations, so you can go at your own pace, **but please make sure to submit it within three days of registration!**
-- Once you have completed this part of the challenge, please fill out the **Google Form** mentioned at the end of this page.
-
-# Exploratory Analysis
-
-The Customer Service team at Profeco (Mexican Consumer Protection Agency) wants to analyze the monitored products in Mexico. The IT team downloaded the database into an Google Drive on a CSV file of about 20GB; you can find the big file at: [Google Drive File](https://drive.google.com/file/d/1crFR4yrS_6DV3_Fh-HrhANJg1-qlyE-O/view?usp=sharing)
-
-Your task as a Data Engineer is processing the data and creating an exploratory analysis with Python Pandas without using pure Python functions. As an aid to help you start, a small sample of data from the file can be found at: [https://github.com/wizelineacademy/data-engineering-bootcamp/blob/main/data/sample.csv](https://github.com/wizelineacademy/data-engineering-bootcamp/blob/main/data/sample.csv)
-
-<br>
-Once the working environment and data are ready, this exercise takes approximately three hours to complete.
-The following is the structure of the CSV file:
+This repository contains some of the principal resourses that you probably want to use when starts working into the IaC module.
 
 
-| producto                | presentacion                                  | marca            | categoria        | catalogo         | precio | fechaRegistro      | cadenaComercial    | giro       | nombreComercial                         | direccion                             | estado           | municipio | latitud  | longitud   |
-| ------------------------- | ----------------------------------------------- | ------------------ | ------------------ | ------------------ | -------- | -------------------- | -------------------- | ------------ | ----------------------------------------- | --------------------------------------- | ------------------ | ----------- | ---------- | ------------ |
-| CUADERNO FORMA ITALIANA | 96 HOJAS PASTA DURA. CUADRICULA CHICA         | ESTRELLA         | MATERIAL ESCOLAR | UTILES ESCOLARES | 25.9   | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| CRAYONES                | CAJA 12 CERAS. JUMBO. C.B. 201423             | CRAYOLA          | MATERIAL ESCOLAR | UTILES ESCOLARES | 27.5   | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| CRAYONES                | CAJA 12 CERAS. TAMANO REGULAR C.B. 201034     | CRAYOLA          | MATERIAL ESCOLAR | UTILES ESCOLARES | 13.9   | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| COLORES DE MADERA       | CAJA 12 PIEZAS LARGO. TRIANGULAR. C.B. 640646 | PINCELIN         | MATERIAL ESCOLAR | UTILES ESCOLARES | 46.9   | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| COLOR LARGO             | CAJA 36 PIEZAS. CON SACAPUNTAS. 68-4036       | CRAYOLA          | MATERIAL ESCOLAR | UTILES ESCOLARES | 115    | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| BOLIGRAFO               | BLISTER 3 PIEZAS. PUNTO FINO. GEL             | BIC. CRISTAL GEL | MATERIAL ESCOLAR | UTILES ESCOLARES | 32.5   | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
-| CINTA ADHESIVA          | BOLSA 1 PIEZA. 12 MM. X 33 M. C.B. 100317     | SCOTCH 3M. 600   | MATERIAL ESCOLAR | UTILES ESCOLARES | 9      | 2011-05-18 0:00:00 | ABASTECEDORA LUMEN | PAPELERIAS | ABASTECEDORA LUMEN SUCURSAL VILLA COAPA | CANNES No. 6 ESQ. CANAL DE MIRAMONTES | DISTRITO FEDERAL | TLALPAN   | 19.29699 | -99.125417 |
+<a id="orgd498d9b"></a>
 
-#### **Respond to the following questions:**
+# Contains of this repo
 
-1. How many commercial chains are monitored, and therefore, included in this database?
-2. What are the top 10 monitored products by State?
-3. Which is the commercial chain with the highest number of monitored products?
-4. Use the data to find an interesting fact.
-5. What are the lessons learned from this exercise?
-6. Can you identify other ways to approach this problem? Explain.
+    .
+    └── terraforms-templates
+        ├── aws
+        │   ├── assests
+        │   └── modules
+        │       ├── ec2
+        │       ├── eks
+        │       ├── networking
+        │       ├── rds
+        │       └── s3
+        ├── gcp
+        │   ├── modules
+        │   │   ├── cloudsql
+        │   │   ├── compute-engine
+        │   │   ├── gke
+        │   │   └── vpc
+        │   └── nfs
+        └── kubernetes
 
-### Deliverables
 
-* Google Form with your forked GitHub repository URL containing your code.
-* Python Code (Plain Script or Jupyter Notebook) on GitHub.
-* Create a report that includes the responses to the questions, the lessons learned, and any additional comments. In this report, you can include diagrams and images that support your solution. Upload your report into your forked GitHub repository.  
+<a id="org345164b"></a>
+
+# Terraform K8s Cluster
+
+
+<a id="org7565b64"></a>
+
+## Terraform AWS-EKS
+
+The current architecture was implemented following this guide [Provisioning an EKS Cluster guide](http://learn.hashicorp.com/terraform/kubernetes/provision-eks-cluster))
+
+
+<a id="orge649e36"></a>
+
+### Prerequisites
+
+-   AWS account configured. For this example we are using default profile and *us-east-2* region
+-   Kubect cli
+
+
+<a id="orged9bd56"></a>
+
+### Dependencies
+
+-   aws cli
+-   Cluster version: 1.20
+-   Terraform >= 0.13
+
+
+<a id="org1afe563"></a>
+
+### Installing
+
+Go to the directory `aws/` and execute the Terraform commands:
+
+    terraform init
+    terraform apply --var-file=terraform.tfvars
+
+Once that the cluster is created (it will took a few minutes), set the kubectl context:
+
+    aws eks --region $(terraform output -raw region) update-kubeconfig --name $(terraform output -raw cluster_name)
+
+
+<a id="org0f67a5b"></a>
+
+## Terraform GCP-GKEz
+
+The current architecture was implemented following this guide [Provision a GKE Cluster guide](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes) )
+
+
+<a id="org31b9b2f"></a>
+
+### Prerequisites
+
+-   GCP account configured
+-   Kubectl cli
+
+
+<a id="orgac59c44"></a>
+
+### Dependencies
+
+-   gcloud cli
+-   Cluster Version: 1.20
+-   Terraform >= 0.13
+
+
+<a id="org0bff38b"></a>
+
+### Installing
+
+Go to the directory `gcp/` and execute the following Terraform commands:
+
+    terraform init
+    terraform apply --var-file=terraform.tfvars
+
+Once that the cluster is created (it will took a few minutes), set the kubectl context:
+
+    gcloud container clusters get-credentials $(terraform output -raw kubernetes_cluster_name) --region $(terraform output -raw location)
+
+
+<a id="orgaf76e90"></a>
+
+## Terraform destruction
+
+To destroy the EKS cluster with all the services, we run:
+
+    terraform destroy --var-file=terraform.tfvars
+
+**Important notes**
+Remember that you are working with services on the cloud and you are creating the infraestructure to work with between them. Often times, due different conditions, including internet desconections and server problems, some of your services will stay in your Cloud Provider, so, we encourage you to check twice everytime you run this feature and make sure that all the services were shut down properly.
+
+
+<a id="orge05fa1c"></a>
+
+# Airflow
+
+
+<a id="org354ee35"></a>
+
+## Prerequisites
+
+-   Helm 3
+
+
+<a id="orga24c46c"></a>
+
+## Dependencies
+
+-   kubernetes cluster version: 1.20
+
+
+<a id="org8d73d40"></a>
+
+## NFS preparation
+
+To work with Airflow we will use a NFS servicem we will create it in the Kubernetes cluster.
+
+First create a namespace for the nsf server executing in your respective cloud provider path:
+
+    kubectl create namespace nfs
+
+then is time to create the nfs server using your *yaml file*:
+
+    kubectl -n nfs apply -f nfs/nfs-server.yaml
+
+now export the nfs server:
+
+    export NFS_SERVER=$(kubectl -n nfs get service/nfs-server -o jsonpath="{.spec.clusterIP}")
+
+finally, in order to install Airflow, go to the directory `kubernetes/`:
+
+
+<a id="orgf1fe05d"></a>
+
+## Storage
+
+Create a namespace for storage deployment:
+
+    kubectl create namespace storage
+
+Add the chart for the nfs-provisioner
+
+    helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/
+
+Install nfs-external-provisioner
+
+    helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner \
+        --namespace storage \
+        --set nfs.server=$NFS_SERVER \
+        --set nfs.path=/
+
+
+<a id="org277433f"></a>
+
+## Airflow Installation
+
+Here we are using official Airflow helm chart as example, but, can also been installed any other Airflow distribution.
+
+Create the namespace
+
+    kubectl create namespace airflow
+
+Add the chart repository and confirm:
+
+    helm repo add apache-airflow https://airflow.apache.org
+
+Update the file `airflow-values.yaml` attributes; repo, branch and subPath of your DAGs.
+
+    yaml
+    gitSync:
+    enabled: true
     
-    If you want to deliver an online document, the **[Google Form](https://forms.gle/BVWLqYnoFj8CRF3v8)** has an optional field for your online document URL. (Remember to configure the suitable access policy for your document)
+    # git repo clone url
+    # ssh examples ssh://git@github.com/apache/airflow.git
+    # git@github.com:apache/airflow.git
+    # https example: https://github.com/mmendoza17/data-bootcamp-terraforms-mmendoza
     
-* Create a 5-minute video to explain your solution, thought process, and relevant information from your report. You can create a Slideshow for your report as an aid for your video. Upload your video as a private video on any Video platform of your preference (YouTube, Vimeo, etc.) and provide the link to your video on the **[Google Form](https://forms.gle/BVWLqYnoFj8CRF3v8)**
+    repo: https://github.com/eiffela65/Airflow-Templates
+    branch: main
+    rev: HEAD
+    depth: 1
+    
+    # the number of consecutive failures allowed before aborting
+    maxFailures: 0
+    
+    # subpath within the repo where dags are located
+    # should be "" if dags are at repo root
+    subPath: ""
 
----
+Install the airflow chart from the repository:
 
-## Don’t forget to fill out the Google Form with your forked repository!
+    helm install airflow -f airflow-values.yaml apache-airflow/airflow --namespace airflow
 
-Remember, you must send your forked repository by filling out the following **[Google Form](https://forms.gle/BVWLqYnoFj8CRF3v8)** within **three days of your registration date** to be considered for the Wizeline Academy Data Engineering Bootcamp!
+We can verify that our pods are up and running by executing:
 
-Thanks for completing the challenge. We can't wait to see you soon!
+    kubectl get pods -n airflow
+
+
+<a id="org7056489"></a>
+
+## Accessing to Airflow dashboard
+
+The Helm chart shows how to connect:
+
+    You can now access your dashboard(s) by executing the following command(s) and visiting the corresponding port at localhost in your browser:
+    
+    Airflow Webserver:     kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
+    Flower dashboard:      kubectl port-forward svc/airflow-flower 5555:5555 --namespace airflow
+    Default Webserver (Airflow UI) Login credentials:
+        username: admin
+        password: admin
+    Default Postgres connection credentials:
+        username: postgres
+        password: postgres
+        port: 5432
+    
+    You can get Fernet Key value by running the following:
+    
+        echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
+
+As you can see, we need to access to the dashboard running:
+
+    kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
+    kubectl port-forward svc/airflow-flower 5555:5555 --namespace airflow
+
+
+<a id="org39ecc4e"></a>
+
+# Acknowledgments
+
+This solution was based on this guide: [Provision a GKE Cluster guide](https://learn.hashicorp.com/tutorials/terraform/gke?in=terraform/kubernetes), containing Terraform configuration files to provision an GKE cluster on GCP.
+
